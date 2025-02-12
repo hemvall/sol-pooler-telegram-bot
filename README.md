@@ -18,6 +18,10 @@ SolPooler is a Telegram bot designed to automate the creation of Solana addresse
 
 /buy_token <contract_address> → Purchases tokens using the provided CA
 
+/transfer_funds <amount> <destination_address>
+
+/withdraw_funds <amount>
+
 ## 🔒 Security Note
 
 Keep your .env file private to protect sensitive data.
