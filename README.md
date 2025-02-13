@@ -25,6 +25,20 @@ SolPooler is a Telegram bot designed to automate the creation of Solana addresse
 /withdraw_funds <amount>
 
 ## 🔒 Security Note
+To keep your Telegram bot token secure, avoid hardcoding it in your scripts. Here is how you can do it :
+
+Put .env file at root of project 
+
+### Linux/macOS: Add this line to ~/.bashrc or ~/.zshrc
+```export TELEGRAM_BOT_TOKEN="your-secret-token"```
+### Windows (PowerShell):
+```$env:TELEGRAM_BOT_TOKEN="your-secret-token"```
+
+### in config.py
+```
+import os
+TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+```
 
 Keep your .env file private to protect sensitive data.
 
