@@ -2,8 +2,11 @@ from typing import Final
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes, CallbackContext, Updater
 from solders.keypair import Keypair
+from solders.pubkey import Pubkey
 from solana.rpc.api import Client
 import base64
+import json
+import os
 
 # https://api.mainnet-beta.solana.com/
 # https://michaelhly.com/solana-py/
@@ -15,32 +18,90 @@ TOKEN: Final = '7923573769:AAGSP1_IcReEf8iLnvvEpwvSYAMwlVzsaMU'
 BOT_USERNAME = '@SolPooler_v1_Bot.'
 
 # Solana client setup
-client = Client("https://api.mainnet-beta.solana.com/")  # Use the mainnet or devnet endpoint
+SOLANA_RPC_URL = "https://api.mainnet-beta.solana.com"
+client = Client(SOLANA_RPC_URL)  # Use the mainnet or devnet endpoint
+
+wallets_file_path = "secure_wallets/wallets.json"
 
 
 # Commands
-async def create_wallets_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # TODO : ask for number of wallets I want to create
-    # Generate a new Solana wallet
-    kp = Keypair()
 
-    private_key = kp.secret()
-    public_key = kp.pubkey()
-    public_key_bytes = bytes(public_key)
-    public_key = public_key
-    full_private_key = private_key + public_key_bytes
-    private_key_base64 = base64.b64encode(full_private_key).decode('utf-8')
+def load_wallets():
+    try:
+        with open(wallets_file_path, "r") as file:
+            wallets = json.load(file)
+            return wallets
+    except FileNotFoundError:
+        print("Wallets file not found.")
+        return []
+    except json.JSONDecodeError:
+        print("Error decoding JSON file.")
+        return []
+
+
+async def create_wallets_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    nb_wallets: int = 5
+    wallets = []
+    wallets_keys = []
+    os.makedirs(os.path.dirname(wallets_file_path), exist_ok=True)
+
+    # Generate the new Sol wallets
+    for i in range(nb_wallets):
+        kp = Keypair()
+
+        private_key = kp.secret()
+        public_key = kp.pubkey()
+        public_key_bytes = bytes(public_key)
+        full_private_key = private_key + public_key_bytes
+        private_key_base64 = base64.b64encode(full_private_key).decode('utf-8')
+
+        wallets.append(
+            f"\n<b>💼 Wallet {i + 1}:</b>\n\n"
+            # f"🔑 Public Key {public_key}\n"
+            f"🔑 Private Key:\n{private_key_base64}\n\n"
+        )
+        # TODO : convert to pubkey correctly
+        wallets_keys.append({
+            "public_key": Pubkey(public_key),
+            "private_key": private_key_base64
+        })
+
+    # Combine all wallet info into one message and send it
+    all_wallets_info = "".join(wallets)
     await update.message.reply_text(
-        f"New wallet created!\n\n"
-        f"Public Key: {public_key}\n\n"
-        f"Private Key:\n{private_key_base64}\n\n"
-        f"Save this key securely!"
+        f"Here are your {nb_wallets} wallets:\n{all_wallets_info}Save these keys securely!\n\n💡The wallets will automatically be imported into the bot, and you can also add them manually to your Phantom wallet.",
+        parse_mode='HTML'
     )
-    # NOTE: Private key should never be exposed in production! This is just for demonstration purposes.
+    # Save wallet keys to
+    with open(wallets_file_path, 'w') as file:
+        json.dump(wallets_keys, file, indent=4)
+
+    print(f"Wallets saved to {wallets_file_path}")
+    # NOTE: Private keys should never be exposed in production! This is just for demonstration purposes.
     # If you need to store or manage the private key, you should do it securely.
 
+
 async def balances_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("You don't have a lot of money, sir.")
+    print(f"Wallets loaded from {wallets_file_path}")
+    wallets = load_wallets()
+    print(wallets)
+    print(wallets[0])
+    count = 1
+    for wallet in wallets:
+        public_key = wallet["public_key"]
+
+        # use pubkey_obj to get balance
+        response = client.get_balance(public_key)
+        balance_sol = response["result"]["value"] / 1_000_000_000
+
+        EPSILON = 1e-9  # Almost 0
+        if abs(balance_sol) > EPSILON:
+            await update.message.reply_text(f"Wallet {count} : {balance_sol} SOL.")
+        else:
+            await update.message.reply_text("You don't have any money, sir.")
+
+        count += 1
+
 
 async def buy_token_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     contract_address: str = ''
