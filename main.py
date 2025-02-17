@@ -135,7 +135,7 @@ async def buy_token_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # TODO : connect to each wallet and buy /!\ don't forget to make it random (which wallet)
 
 async def transfer_funds_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Transferring funds to your wallets...")
+    await update.message.reply_text("Transferring funds to your subwallets...")
 
     # Transaction details
     amount_in_sol = 0.05
@@ -180,6 +180,26 @@ async def transfer_funds_command(update: Update, context: ContextTypes.DEFAULT_T
     """
     print("Transaction sent with signature : ???")
 
+async def withdraw_funds_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Transferring funds to your main wallet...")
+
+    # Transaction details TODO : make it max amount
+    amount_in_sol = 0.05
+    lamports = int(amount_in_sol * 1_000_000_000)  # 1 SOL = 1e9 lamports
+
+    with open(wallets_file_path, "r") as file:
+        data = json.load(file)  # Parse JSON
+        wallets = data.get("wallets", [])  # Extract the list of wallets
+        main_wallet = data.get("main_wallet", {})  # Extract the main wallet
+    # main wallet import
+    recipient_private_key = main_wallet["private_key"]
+    recipient_public_key = main_wallet["public_key"]
+
+    # recipient's wallets import
+    for wallet in wallets:
+        sender_public_key = wallet["public_key"]
+        print(f"Sending back {amount_in_sol} SOL from {sender_public_key} to your main Wallet...")
+    await update.message.reply_text(f"✅ Successfully sent back {amount_in_sol} SOL to your main wallet from {sender_public_key} !➡️💸")
 
 MENU, OPTION1, OPTION2, OPTION3, OPTION4 = range(5)
 async def start_command(update: Update, context: CallbackContext) -> int:
@@ -352,6 +372,7 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler('balances', balances_command))
     app.add_handler(CommandHandler('buy_token', buy_token_command))
     app.add_handler(CommandHandler('transfer_funds', transfer_funds_command))
+    app.add_handler(CommandHandler('withdraw_funds', withdraw_funds_command))
     app.add_handler(CommandHandler('import_wallet', import_wallet_command))
     app.add_handler(CommandHandler('start', start_command))
     app.add_handler(CallbackQueryHandler(button_callback))
