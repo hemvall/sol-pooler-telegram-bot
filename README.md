@@ -30,6 +30,7 @@ balances - Checks wallet balances
 buy-token - Purchases tokens using the provided CA  
 import_wallet - Import your main wallet to transfer funds to subwallets
 transfer_funds - Transfers funds between wallets  
+withdraw_funds - Send back funds from subwallet to your original one  
 create_wallets - Creates 5 new Solana wallets  
 
 
