@@ -1,22 +1,24 @@
-[
-    {
-        "public_key": "BFAYwuxKpFzPYYo6Y1Ji5wWg1St2oaXdYRQLAfnygMef",
-        "private_key": "yUwu8DTcIBdgzxdSdZbDXFzLXpY/HNTLkViEHARFCRmYNcy6kt+42SfgDL5EVh6urcLlH+vhjj1LYxv0wWCBEA=="
-    },
-    {
-        "public_key": "H6To7j6vVhqbYkKCLC1WFW9fz7Hr9NMGruP4vDTC9gPb",
-        "private_key": "tAxGTnuwMpqm8XBRnW3kAqb21JymJdGezZ9/+ax4Na/vITEzICl39NE5cMe6Kvm/oDGLbdxhJijdWemX0QLXSg=="
-    },
-    {
-        "public_key": "Bw3wGvFnfa589ScipC5p5ao5BFs5mxAMZtVf8mwTQh8H",
-        "private_key": "5ngQ7qg34dHcTBrmW4VuDHFQcXmZN4PQyUeJZTaEX3yibY1sZT1+/2Zm7PIqYW9NopTnEMiTGjAm0JNMlD4yvg=="
-    },
-    {
-        "public_key": "4EojrnW26NdAtvGXLwaJmzSNNs2bdkMhuLsZWTrhYX2N",
-        "private_key": "NxF7b3x/spniP9QnHqvt07OHhmASdkGwtw8sSdgs9GwwHHWM7u13zbCZDsxthKZhloLYRuy2uH0/ldZayxxWfw=="
-    },
-    {
-        "public_key": "6UYUYWDzwVesKtzKNt3YKKnPc5JpS5EhHrtQbJTiAKy9",
-        "private_key": "SaIgaRYW4HzrOhdxeGsO2+RaIN8aX8usRVEL0lcpWWtRWLSKlROPC4wvbSbyx8tdGMS9P82gtR2nppl0qt/muA=="
+{
+    "wallets": [
+        {
+            "public_key": "H5Jmmj4mJZxvHvagLQS8yCSA8pt7VVjoJ8zqAnjTUBmc",
+            "private_key": "I/7Izz6pWrMgRD/x9IB5bijnfUTpGy8JxdO66AmCmoju1Wio6Qgu/0QZtjwuwTUfhNRFOc6cXdmt4XBexVKlWw=="
+        },
+        {
+            "public_key": "76jjhP52rLm76EosPhNJB5ihkJ6mUyiq4tr9zWyfix4d",
+            "private_key": "3ecMpAAcxlgc93zzvhvjQ6F70fYDpSvZH0+4001wkmdanlj2mxM900gBcEffCcv1shKCTOM+8lKleNrQ6GtBFg=="
+        },
+        {
+            "public_key": "6MEHEssms1s3sjJZQbZ1XzVXWoggvsfaoNuaXkYGNfd6",
+            "private_key": "8MP6cf3Byj+B1MZ+3KxhcH7RNz6i56a5F5o2qqbqq9pPeREI8dbomSfy5PShlOzeHTboqmqL7/Rd8UWsT1iH3Q=="
+        },
+        {
+            "public_key": "9hUnVhsdMXV1VurSK5zuwpmpyP6bo1PecmuzcciS1Eud",
+            "private_key": "ytvO+3DIdbeGabW5m0FRhjelyDlLS+DaTOy7le5Jc/WBPCTI07javI/DoTQBgY/znyaN/v7NzwP1lpHNbLUXMA=="
+        }
+    ],
+    "main_wallet": {
+        "public_key": "5QKmyqaAvMT5eLirmysM6SaanKwJM9dAf3f3ctH6gFKZ",
+        "private_key": "2CS55fJph8PxjidSP9HBAnnBq3ynG4SWCB7fPt9mLbXFDnNEePSJJkbrPyCeiVy88sBEGTXMoanTiibrmxuRfEUs"
     }
-]
+}

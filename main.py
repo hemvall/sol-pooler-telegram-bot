@@ -1,6 +1,6 @@
 from typing import Final
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes, CallbackContext, Updater
+from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ConversationHandler, MessageHandler, filters, ContextTypes, CallbackContext, Updater
 from solders.keypair import Keypair
 from solders.pubkey import Pubkey
 from solana.rpc.api import Client
@@ -37,67 +37,88 @@ def load_wallets():
     except json.JSONDecodeError:
         print("Error decoding JSON file.")
         return []
+def load_wallet_data():
+    try:
+        with open(wallets_file_path, "r") as file:
+            data = json.load(file)
+            if isinstance(data, dict):
+                return data
+            else:
+                return {"wallets": [], "main_wallet": None}  # Initialize as a dictionary
+    except FileNotFoundError:
+        print("Wallets file not found.")
+        return {"wallets": [], "main_wallet": None}  # Ensure structure
+    except json.JSONDecodeError:
+        print("Error decoding JSON file.")
+        return {"wallets": [], "main_wallet": None}
 
 
 async def create_wallets_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    nb_wallets: int = 1 # change to 5
+    nb_wallets: int = 3  # Change to 5 if needed
     wallets = []
-    wallets_keys = []
+    new_wallets = []
     os.makedirs(os.path.dirname(wallets_file_path), exist_ok=True)
 
-    # Generate the new Sol wallets
+    # Load existing data to append new wallets
+    data = load_wallet_data()
+
     for i in range(nb_wallets):
         kp = Keypair()
-
         private_key = kp.secret()
         public_key = kp.pubkey()
-        public_key_bytes = bytes(public_key)  # Use .to_bytes() method to convert to bytes
-        full_private_key = private_key + public_key_bytes
-        private_key_base64 = base64.b64encode(full_private_key).decode('utf-8')
+        private_key_base64 = base64.b64encode(private_key + bytes(public_key)).decode('utf-8')
 
-        wallets.append(
-            f"\n<b>💼 Wallet {i + 1}:</b>\n\n"
-            f"🔑 Private Key:\n{private_key_base64}\n\n"
-        )
-        wallets_keys.append({
-            "public_key": str(public_key),  # Convert Pubkey to string if needed
-            "private_key": private_key_base64
-        })
+        new_wallets.append({"public_key": str(public_key), "private_key": private_key_base64})
+        wallets.append(f"\n<b>💼 Wallet {i + 1}:</b>\n\n🔑 Private Key:\n{private_key_base64}\n\n")
 
-    # Combine all wallet info into one message and send it
+    # Append new wallets to the existing ones
+    data["wallets"].extend(new_wallets)
+
+    # Save updated data
+    with open(wallets_file_path, 'w') as file:
+        json.dump(data, file, indent=4)
+
     all_wallets_info = "".join(wallets)
     await update.message.reply_text(
-        f"Here are your {nb_wallets} wallets:\n{all_wallets_info}Save these keys securely!\n\n💡The wallets will automatically be imported into the bot, and you can also add them manually to your Phantom wallet.",
+        f"Here are your {nb_wallets} wallets:\n{all_wallets_info}Save these keys securely!",
         parse_mode='HTML'
     )
-    # Save wallet keys to
-    with open(wallets_file_path, 'w') as file:
-        json.dump(wallets_keys, file, indent=4)
-
-    print(f"Wallets saved to {wallets_file_path}")
-    # NOTE: Private keys should never be exposed in production! This is just for demonstration purposes.
-    # If you need to store or manage the private key, you should do it securely.
 
 
 async def balances_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print(f"Wallets loaded from {wallets_file_path}")
-    wallets = load_wallets()
-    print(wallets)
+
+    # Load wallets directly from the JSON file
+    with open(wallets_file_path, "r") as file:
+        data = json.load(file)  # Parse JSON
+        wallets = data.get("wallets", [])  # Extract the list of wallets
+        main_wallet = data.get("main_wallet", {})  # Extract the main wallet
+    print(f"Main Wallet: {main_wallet}")
+    print(f"Wallets loaded from {wallets_file_path}: {wallets}")
+    EPSILON = 1e-9
+
+    # Process main wallet if it exists
+    if "public_key" in main_wallet:
+        public_key = main_wallet["public_key"]
+        public_key_final = Pubkey.from_string(public_key)
+        response = client.get_balance(public_key_final)
+        balance_sol = response.value / 1_000_000_000  # Convert lamports to SOL
+        if abs(balance_sol) > EPSILON:
+            await update.message.reply_text(f"<b>🌟 Main Wallet:</b> {balance_sol} SOL. ({public_key_final})", parse_mode='HTML')
+        else:
+            await update.message.reply_text(f"<b>🌟 Main Wallet:</b> 0 SOL ({public_key_final})\nYou don't have any money on this wallet, sir.", parse_mode='HTML')
+
+    # Process subwallets if they exist
     count = 1
     for wallet in wallets:
         public_key = wallet["public_key"]
         public_key_final = Pubkey.from_string(public_key)  # Convert base58 string to Pubkey
-        # Get balance response
         response = client.get_balance(public_key_final)
-
-        # Access balance from the response
-        balance_sol = response.value / 1_000_000_000  # Access the balance value
-
-        EPSILON = 1e-9  # Almost 0
+        balance_sol = response.value / 1_000_000_000  # Convert lamports to SOL
         if abs(balance_sol) > EPSILON:
-            await update.message.reply_text(f"<b>💼 Wallet {count} :</b> {balance_sol} SOL.", parse_mode='HTML')
+            await update.message.reply_text(f"<b>💼 Wallet {count}:</b> {balance_sol} SOL. ({public_key_final})", parse_mode='HTML')
         else:
-            await update.message.reply_text(f"<b>💼 Wallet {count}:</b> : 0 SOL\nYou don't have any money on this wallet, sir.", parse_mode='HTML')
+            await update.message.reply_text(
+                f"<b>💼 Wallet {count}:</b> 0 SOL ({public_key_final})\nYou don't have any money on this wallet, sir.", parse_mode='HTML')
 
         count += 1
 
@@ -113,6 +134,7 @@ async def buy_token_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def transfer_funds_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Transferring funds to your wallets...")
+
 
 MENU, OPTION1, OPTION2, OPTION3, OPTION4 = range(5)
 async def start_command(update: Update, context: CallbackContext) -> int:
@@ -216,15 +238,76 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def error(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f'Update {update} caused error {context.error}')
 
+
+# Conversation states
+ASK_PUBLIC_KEY, ASK_PRIVATE_KEY = range(2)
+
+
+async def import_wallet_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Starts the conversation to import a main wallet by asking for the public key."""
+    await update.message.reply_text("Please enter your main wallet's public key:")
+    return ASK_PUBLIC_KEY  # Move to the next state
+
+
+async def ask_private_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handles the public key input and asks for the private key."""
+    context.user_data["public_key"] = update.message.text  # Store public key
+
+    print(f"Received Public Key: {context.user_data['public_key']}")  # Debugging log
+    print(f"Current state: ASK_PUBLIC_KEY")  # Check if state transitions correctly
+
+    await update.message.reply_text("Now, please enter your main wallet's private key:")
+    return ASK_PRIVATE_KEY  # Move to the next state
+
+
+
+async def save_wallet(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    private_key = update.message.text
+    public_key = context.user_data.get("public_key")
+
+    if not public_key:
+        await update.message.reply_text("Error: Public key was not provided. Please restart the import process.")
+        return ConversationHandler.END
+
+    # Load existing data
+    data = load_wallet_data()
+
+    # Store or update main wallet
+    data["main_wallet"] = {"public_key": public_key, "private_key": private_key}
+
+    # Save updated data
+    with open(wallets_file_path, 'w') as file:
+        json.dump(data, file, indent=4)
+
+    await update.message.reply_text("✅ Main wallet successfully imported!")
+    return ConversationHandler.END
+
+
+
+async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Cancels the wallet import process."""
+    await update.message.reply_text("Wallet import canceled.")
+    return ConversationHandler.END
+
 if __name__ == '__main__':
     print('Starting telegram bot...')
     app = Application.builder().token(TOKEN).build()
+    import_wallet_conversation = ConversationHandler(
+        entry_points=[CommandHandler('import_wallet', import_wallet_command)],
+        states={
+            ASK_PUBLIC_KEY: [MessageHandler(filters.TEXT, ask_private_key)],
+            ASK_PRIVATE_KEY: [MessageHandler(filters.TEXT, save_wallet)]
+        },
+        fallbacks=[CommandHandler('cancel', cancel)]
+    )
 
     # Commands
+    app.add_handler(import_wallet_conversation)
     app.add_handler(CommandHandler('create_wallets', create_wallets_command))
     app.add_handler(CommandHandler('balances', balances_command))
     app.add_handler(CommandHandler('buy_token', buy_token_command))
     app.add_handler(CommandHandler('transfer_funds', transfer_funds_command))
+    app.add_handler(CommandHandler('import_wallet', import_wallet_command))
     app.add_handler(CommandHandler('start', start_command))
     app.add_handler(CallbackQueryHandler(button_callback))
 

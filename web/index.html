@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolPooler</title>
+    <style>
+        body {
+            background-color: black;
+            color: #00ff00;
+            font-family: "Courier New", monospace;
+            text-align: center;
+            padding-top: 50px;
+            overflow: hidden;
+        }
+        .scan-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                rgba(0, 255, 0, 0.1) 0px, 
+                rgba(0, 255, 0, 0.2) 2px, 
+                transparent 4px, 
+                transparent 8px
+            );
+            pointer-events: none;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        #description {
+            font-size: 1.2em;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 2px solid #00ff00;
+            display: inline-block;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        #startButton {
+            background-color: black;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            font-family: "Courier New", monospace;
+            cursor: pointer;
+            margin-top: 20px;
+	    transition: .2s ease-in-out;
+        }
+        #startButton:hover {
+            background-color: #00ff00;
+            color: black;
+        }
+        #terminalInput {
+            background: black;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            font-size: 1.2em;
+            font-family: "Courier New", monospace;
+            width: 80%;
+            padding: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="scan-lines"></div>
+    <div class="container">
+        <h1>SolPooler - #1 Volume booster</h1>
+        <p id="description"></p>
+    </div>
+    <button id="startButton">Boost my volume.</button><br/><br/><br/>
+    <input type="text" id="terminalInput" placeholder="> Write a command..." disabled>
+
+    <script>
+        const text = "Connecting to the Solana network...\nCreating wallets...\nSending and managing funds...\nReady for token purchase.";
+        let i = 0;
+        let audio = new Audio("https://www.fesliyanstudios.com/play-mp3/4385"); // Bruit de terminal
+        let isTyping = false;
+	typeWriter();
+
+        function typeWriter() {
+            if (i < text.length) {
+                let char = text.charAt(i);
+                document.getElementById("description").innerHTML += char === "\n" ? "<br>" : char;
+                i++;
+                setTimeout(typeWriter, 55);
+            } else {
+                document.getElementById("description").style.borderRight = "none";
+                isTyping = false;
+                document.getElementById("terminalInput").disabled = false;
+            }
+        }
+
+        document.getElementById("startButton").addEventListener("click", function () {
+            if (!isTyping) {
+                isTyping = true;
+                document.getElementById("description").innerHTML = "";
+                i = 0;
+                audio.play();
+            }
+        });
+
+        document.getElementById("terminalInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                let input = this.value.trim().toLowerCase();
+                this.value = "";
+                if (input === "status") {
+                    alert("SolPooler est en ligne !");
+                } else if (input === "help") {
+                    alert("Commandes disponibles :\n- status\n- help");
+                } else {
+                    alert("Commande inconnue.");
+                }
+            }
+        });
+    </script>
+</body>
+</html>
