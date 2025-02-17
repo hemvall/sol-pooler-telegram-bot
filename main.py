@@ -40,7 +40,7 @@ def load_wallets():
 
 
 async def create_wallets_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    nb_wallets: int = 5
+    nb_wallets: int = 1 # change to 5
     wallets = []
     wallets_keys = []
     os.makedirs(os.path.dirname(wallets_file_path), exist_ok=True)
@@ -51,18 +51,16 @@ async def create_wallets_command(update: Update, context: ContextTypes.DEFAULT_T
 
         private_key = kp.secret()
         public_key = kp.pubkey()
-        public_key_bytes = bytes(public_key)
+        public_key_bytes = bytes(public_key)  # Use .to_bytes() method to convert to bytes
         full_private_key = private_key + public_key_bytes
         private_key_base64 = base64.b64encode(full_private_key).decode('utf-8')
 
         wallets.append(
             f"\n<b>💼 Wallet {i + 1}:</b>\n\n"
-            # f"🔑 Public Key {public_key}\n"
             f"🔑 Private Key:\n{private_key_base64}\n\n"
         )
-        # TODO : convert to pubkey correctly
         wallets_keys.append({
-            "public_key": Pubkey(public_key),
+            "public_key": str(public_key),  # Convert Pubkey to string if needed
             "private_key": private_key_base64
         })
 
@@ -85,20 +83,21 @@ async def balances_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f"Wallets loaded from {wallets_file_path}")
     wallets = load_wallets()
     print(wallets)
-    print(wallets[0])
     count = 1
     for wallet in wallets:
         public_key = wallet["public_key"]
+        public_key_final = Pubkey.from_string(public_key)  # Convert base58 string to Pubkey
+        # Get balance response
+        response = client.get_balance(public_key_final)
 
-        # use pubkey_obj to get balance
-        response = client.get_balance(public_key)
-        balance_sol = response["result"]["value"] / 1_000_000_000
+        # Access balance from the response
+        balance_sol = response.value / 1_000_000_000  # Access the balance value
 
         EPSILON = 1e-9  # Almost 0
         if abs(balance_sol) > EPSILON:
-            await update.message.reply_text(f"Wallet {count} : {balance_sol} SOL.")
+            await update.message.reply_text(f"<b>💼 Wallet {count} :</b> {balance_sol} SOL.", parse_mode='HTML')
         else:
-            await update.message.reply_text("You don't have any money, sir.")
+            await update.message.reply_text(f"<b>💼 Wallet {count}:</b> : 0 SOL\nYou don't have any money on this wallet, sir.", parse_mode='HTML')
 
         count += 1
 
