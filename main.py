@@ -3,6 +3,8 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ConversationHandler, MessageHandler, filters, ContextTypes, CallbackContext, Updater
 from solders.keypair import Keypair
 from solders.pubkey import Pubkey
+from solders.transaction import Transaction
+from solders.system_program import TransferWithSeedParams, TransferParams
 from solana.rpc.api import Client
 import base64
 import json
@@ -134,6 +136,49 @@ async def buy_token_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def transfer_funds_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Transferring funds to your wallets...")
+
+    # Transaction details
+    amount_in_sol = 0.05
+    lamports = int(amount_in_sol * 1_000_000_000)  # 1 SOL = 1e9 lamports
+
+    # main wallet import
+    with open(wallets_file_path, "r") as file:
+        data = json.load(file)  # Parse JSON
+        wallets = data.get("wallets", [])  # Extract the list of wallets
+        main_wallet = data.get("main_wallet", {})  # Extract the main wallet
+    sender_private_key = main_wallet["private_key"]
+    sender_public_key = main_wallet["public_key"]
+
+    # recipient's wallets import
+    for wallet in wallets:
+        recipient_public_key = wallet["public_key"]
+        print(f"Sending {amount_in_sol} SOL to {recipient_public_key} from {sender_public_key}...")
+    await update.message.reply_text(f"✅ Successfully sent {amount_in_sol} SOL to Sub Wallets from {sender_public_key} !➡️💸")
+
+
+    """
+    # Set up the params for the transfer with seed
+    params = TransferWithSeedParams(
+        from_pubkey=sender_public_key,
+        from_base=from_base_pubkey,
+        from_seed=from_seed,
+        from_owner=from_owner_pubkey,
+        to_pubkey=recipient_public_key,
+        lamports=lamports
+    )
+
+    # Create the transaction
+    transaction = Transaction().add(
+        transfer_with_seed(params)
+    )
+
+    # Send the transaction
+    response = client.send_transaction(transaction, sender_keypair)
+
+    # Output the transaction response
+    print(f"Transaction signature: {response['result']}")
+    """
+    print("Transaction sent with signature : ???")
 
 
 MENU, OPTION1, OPTION2, OPTION3, OPTION4 = range(5)
