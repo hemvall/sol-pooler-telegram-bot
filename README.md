@@ -28,6 +28,7 @@ SolPooler is a Telegram bot designed to automate the creation of Solana addresse
 start - Starts the bot  
 balances - Checks wallet balances  
 buy-token - Purchases tokens using the provided CA  
+import_wallet - Import your main wallet to transfer funds to subwallets
 transfer_funds - Transfers funds between wallets  
 create_wallets - Creates 5 new Solana wallets  
 
