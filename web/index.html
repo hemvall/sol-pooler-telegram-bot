@@ -4,9 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="SolPooler helps boost your token's volume on Solana by automating wallet creation, transactions, and token purchases.">
+    <meta name="keywords" content="Solana, token, volume, automation, crypto">
+    <meta property="og:title" content="SolPooler - Boost Your Token's Volume on SOL">
+    <meta property="og:description" content="Increase your token's volume and transaction efficiency with SolPooler.">
     <title>SolPooler - Boost Your Token's Volume on SOL</title>
     <style>
-
         body {
             background: url("./assets/landing_bg.png");
             background-size: cover;
@@ -17,6 +21,34 @@
             text-align: center;
             padding-top: 50px;
             /* overflow: hidden; */
+        }
+
+        body:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+            z-index: -1;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: .2;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards;
         }
 
         .scan-lines {
@@ -85,6 +117,11 @@
             animation: pulse 1.5s infinite alternate;
         }
 
+        #startButton:focus,
+        #actionButton:focus {
+            outline: 3px solid #D400FF;
+        }
+
         #startButton:hover {
             background-color: transparent;
             color: #D400FF;
@@ -95,6 +132,7 @@
 
         #actionButton {
             position: absolute;
+            margin-top: 50px;
             top: 59%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -162,7 +200,7 @@
         }
 
         .pricing {
-            margin: 50px 0;
+            margin: 100px 0;
             text-align: left;
             color: white;
         }
@@ -188,6 +226,9 @@
         }
 
         .pricing-plan h3 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 24px;
             color: #D400FF;
         }
@@ -196,9 +237,16 @@
             font-size: 20px;
             margin: 10px 0;
         }
+        .badge {
+            background-color: #00FFA3;
+            color: black;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 10px;
+            margin-left: 10px;
+        }
 
         .faq {
-            background-color: black;
             margin: 0 250px;
         }
 
@@ -271,20 +319,38 @@
                 margin-bottom: 20px;
             }
         }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            #startButton {
+                font-size: 1em;
+            }
+        }
+
     </style>
 </head>
 
 <body>
     <div class="scan-lines"></div>
-    <h1 style="color: white;"><img
+    <h1 style="color: white;" class="fade-in"><img alt="SolPooler Logo"
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Telegram_X_2019_Logo.svg/768px-Telegram_X_2019_Logo.svg.png?20220403112442" />
         SolPooler</h1>
-    <div class="container">
+    <div class="container fade-in">
         <h1>Boost Your Token's Volume on SOL 🚀</h1>
         <p id="description"></p>
-        <button id="startButton">Get Started Now</button><br /><br /><br />
-        <a id="actionButton" href="pages/terminal.html">Try for free</a><br /><br /><br />
         <!-- <input type="text" id="terminalInput" placeholder="> Write a command..." disabled> -->
+    </div>
+    <div class="container fade-in" style="display: block; margin-top: 50px;">
+        <button id="startButton" onclick="showLoader()">Get Started Now</button><br><br>
+        <div id="loader" style="display: none;">Loading...</div>
+        <a id="actionButton" href="pages/terminal.html">Try for free</a>
     </div>
 
     <!-- <div class="testimonials">
@@ -293,7 +359,7 @@
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
         </iframe>
     </div> -->
-    <div class="pricing">
+    <div class="pricing fade-in">
         <h2>Pricing Plans</h2>
         <div class="pricing-table">
             <div class="pricing-plan">
@@ -310,7 +376,7 @@
                 </ul>
             </div>
             <div class="pricing-plan">
-                <h3>Pro Plan</h3>
+                <h3>Pro Plan <span class="badge">Most Popular</span></h3>
                 <p>$500 - $1,000/month</p>
                 <p>🚀 For intermediate projects looking to automate at scale and need more volume and flexibility.</p>
                 <p>Included Features:</p>
@@ -341,13 +407,15 @@
             </div>
         </div>
     </div>
-    <div class="testimonials">
+    <div class="testimonials fade-in">
         <h2>What Our Users Say</h2>
-        <p>"SolPooler has revolutionized the way we manage our token transactions. Highly recommend!" - RN</p>
-        <p>"The automation and security features are top-notch. A must-have tool for any token developer." - AB</p>
+        <p>"SolPooler has revolutionized the way we manage our token transactions. Highly recommend!" - RN, Token
+            Developer</p>
+        <p>"The automation and security features are top-notch. A must-have tool for any token developer." - AB,
+            Influencer</p>
     </div>
 
-    <div class="faq">
+    <div class="faq fade-in">
         <h2>Frequently Asked Questions</h2>
         <p><strong>Q: How secure is SolPooler?</strong></p>
         <p>A: We use advanced encryption and secure protocols to ensure the safety of your funds and data.</p>
@@ -365,12 +433,15 @@
 
     <footer>
         <div class="footer-container">
-            <a href="https://t.me/SolPooler_v1_Bot" target="_blank" class="social-link"><img
+            <a href="https://t.me/SolPooler_v1_Bot" target="_blank" class="social-link"><img alt="Telegram Logo"
                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Telegram_X_2019_Logo.svg/768px-Telegram_X_2019_Logo.svg.png?20220403112442"></a>
-            <a href="https://twitter.com/SolPooler" target="_blank" class="social-link"><img
+            <a href="https://twitter.com/SolPooler" target="_blank" class="social-link"><img alt="X Logo"
                     src="https://img.freepik.com/free-vector/new-2023-twitter-logo-x-icon-design_1017-45418.jpg"></a>
         </div>
         <div class="footer-info">
+            <a href="" class="social-link">Terms</a>
+            <a href="" class="social-link">Privacy Policy</a>
+
             <p>&copy; 2025 SolPooler. All rights reserved.</p>
             <p>Made with ❤️ by SolPooler Team</p>
         </div>
@@ -405,6 +476,13 @@
             document.getElementById("description").innerHTML = "";  // Clear the previous text
             document.getElementById("description").style.borderRight = "solid 2px black";  // Re-enable the cursor effect
             typeWriter();  // Start typing again
+        }
+        function showLoader() {
+            document.getElementById("loader").style.display = "block";
+            // Simulate loading (you can replace this with actual logic)
+            setTimeout(() => {
+                document.getElementById("loader").style.display = "none";
+            }, 2000);
         }
     </script>
 </body>
