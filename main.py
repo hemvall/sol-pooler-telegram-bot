@@ -20,7 +20,9 @@ TOKEN: Final = '7923573769:AAGSP1_IcReEf8iLnvvEpwvSYAMwlVzsaMU'
 BOT_USERNAME = '@SolPooler_v1_Bot.'
 
 # Solana client setup
-SOLANA_RPC_URL = "https://api.mainnet-beta.solana.com"
+SOLANA_RPC_URL = "https://api.devnet.solana.com"
+# https://api.mainnet-beta.solana.com
+# https://api.testnet.solana.com
 client = Client(SOLANA_RPC_URL)  # Use the mainnet or devnet endpoint
 
 wallets_file_path = "secure_wallets/wallets.json"

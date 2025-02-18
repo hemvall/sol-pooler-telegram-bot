@@ -1,16 +1,20 @@
 {
     "wallets": [
         {
-            "public_key": "9hUnVhsdMXV1VurSK5zuwpmpyP6bo1PecmuzcciS1Eud",
-            "private_key": "ytvO+3DIdbeGabW5m0FRhjelyDlLS+DaTOy7le5Jc/WBPCTI07javI/DoTQBgY/znyaN/v7NzwP1lpHNbLUXMA=="
+            "public_key": "GPEVKWqdK9uoBgLRF9Lh9RiY88stBHuCcaHH3ad1QPfd",
+            "private_key": "/lpVhtmDPXclTbc44W70U/5HTydAcJUjcJmz+3G6WUDkkVU6XGUxXDaDzXqgVtDj7zwrTlAXmqZB79Ma+bPtMA=="
         },
         {
-            "public_key": "HUWWhHnanpUk5NuRhNAXDjhkkDSN6Cy2SWSq1w2xktT2",
-            "private_key": "qV5baetR0AiDFFY0EXzjA42mZAYXIl66FgdwNh8KvEP0xwq+OGnaYwCqRfo8H3WPqRWxPSfznSQXSu3SqAQEWQ=="
+            "public_key": "6T96yfT49FrhCDn9jCTrsUZydSwXhnhrHQUXjs6wRtui",
+            "private_key": "Dsz2vTmI0P7kOtHSCW1Pw0kaYNMOLp3URmBMnDcYyTBQ/LKkGaheack/9KddTp/ygo0g/VSQ01koTxQv4UJk3Q=="
+        },
+        {
+            "public_key": "3khUiiKtVTe5kV8t7ybZ9E3dMWa1FoNCJRtwYCi8ECm4",
+            "private_key": "2tFbFhbiDVYLUeC5/7qjqYKk2cQctFC3ajOknrL0UIko6R3+0g7E3JfcVaTHYg1wNP4KAajM++4MpbbwTlOG3w=="
         }
     ],
     "main_wallet": {
-        "public_key": "5QKmyqaAvMT5eLirmysM6SaanKwJM9dAf3f3ctH6gFKZ",
-        "private_key": "2CS55fJph8PxjidSP9HBAnnBq3ynG4SWCB7fPt9mLbXFDnNEePSJJkbrPyCeiVy88sBEGTXMoanTiibrmxuRfEUs"
+        "public_key": "9dqa3aPW8B8FdkvhBWFBvXZs5TKWeyYPidLzRzWrhq7M",
+        "private_key": "Z0rgDd7M+5upSDou0ofm84PkD6AsKiI9eVN/t3JMM0OATVKP3EJ0zYO0c4i3JxHznZBXMRJO/5rOhg6+idrg4A=="
     }
 }

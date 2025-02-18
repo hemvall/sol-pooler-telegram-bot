@@ -1,129 +1,412 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SolPooler</title>
+    <title>SolPooler - Boost Your Token's Volume on SOL</title>
     <style>
+
         body {
-            background-color: black;
-            color: #00ff00;
+            background: url("./assets/landing_bg.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #D400FF;
             font-family: "Courier New", monospace;
             text-align: center;
             padding-top: 50px;
-            overflow: hidden;
+            /* overflow: hidden; */
         }
+
         .scan-lines {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: repeating-linear-gradient(
-                rgba(0, 255, 0, 0.1) 0px, 
-                rgba(0, 255, 0, 0.2) 2px, 
-                transparent 4px, 
-                transparent 8px
-            );
+            background: repeating-linear-gradient(rgba(0, 255, 0, 0.1) 0px,
+                    rgba(0, 255, 0, 0.2) 2px,
+                    transparent 4px,
+                    transparent 8px);
             pointer-events: none;
+            z-index: -99;
         }
+
         h1 {
-            font-size: 2em;
+            font-size: 42px;
+            margin: 0;
+            z-index: 99;
         }
+
+        h2,
+        p,
+        iframe {
+            display: flex;
+            justify-content: center;
+        }
+
+        img {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+        }
+
         #description {
-            font-size: 1.2em;
-            white-space: nowrap;
+            font-size: 22px;
+            white-space: pre-line;
             overflow: hidden;
-            border-right: 2px solid #00ff00;
-            display: inline-block;
+            display: block;
+            width: fit-content;
+            margin: auto;
+            min-height: 6em;
         }
+
         .container {
             width: 80%;
             margin: auto;
         }
-#startButton {
-    position: fixed;
-    top: 42%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: black;
-    color: #00ff00;
-    border: 1px solid #00ff00;
-    padding: 10px 20px;
-    font-size: 1.2em;
-    font-family: "Courier New", monospace;
-    cursor: pointer;
-    transition: .2s ease-in-out;
-}
 
-        #startButton:hover {
-            background-color: #00ff00;
+        #startButton {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #D400FF;
             color: black;
-        }
-        #terminalInput {
-            background: black;
-            color: #00ff00;
-            border: 1px solid #00ff00;
+            border: 1px solid #D400FF;
+            padding: 10px 20px;
             font-size: 1.2em;
             font-family: "Courier New", monospace;
-            width: 80%;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+            box-shadow: 0 0 10px #D400FF;
+            border-radius: 5px;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        #startButton:hover {
+            background-color: transparent;
+            color: #D400FF;
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 0 20px #D400FF;
+            font-weight: 600;
+        }
+
+        #actionButton {
+            position: absolute;
+            top: 59%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: transparent;
+            border: 1px solid #D400FF;
+            color: #D400FF;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            font-family: "Courier New", monospace;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+            box-shadow: 0 0 8px #D400FF;
+            /* Subtle shadow for a more balanced look */
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        #actionButton:hover {
+            background-color: #D400FF;
+            color: black;
+            border: 1px solid #D400FF;
+            transform: translate(-50%, -50%) scale(1.05);
+            /* Slight scale effect for a subtle hover */
+            box-shadow: 0 0 15px #D400FF;
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 10px #D400FF;
+            }
+
+            100% {
+                box-shadow: 0 0 20px #D400FF;
+            }
+        }
+
+        #terminalInput {
+            background: black;
+            color: #D400FF;
+            border: 1px solid #D400FF;
+            font-size: 1.2em;
+            font-family: "Courier New", monospace;
+            width: 13.5%;
             padding: 10px;
             margin-top: 20px;
             text-align: center;
         }
+
+        .testimonials {
+            margin: 50px 0;
+            margin-top: 50px;
+            text-align: left;
+            color: white;
+        }
+
+        .testimonials h2 {
+            font-size: 32px;
+            color: #D400FF;
+        }
+
+        .testimonials p {
+            font-size: 20px;
+            margin: 10px 0;
+        }
+
+        .pricing {
+            margin: 50px 0;
+            text-align: left;
+            color: white;
+        }
+
+        .pricing h2 {
+            font-size: 32px;
+            color: #D400FF;
+        }
+
+        .pricing-table {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            margin: 0 40px;
+        }
+
+        .pricing-plan {
+            background-color: black;
+            border: 1px solid #D400FF;
+            padding: 20px;
+            width: 30%;
+            text-align: center;
+        }
+
+        .pricing-plan h3 {
+            font-size: 24px;
+            color: #D400FF;
+        }
+
+        .pricing-plan p {
+            font-size: 20px;
+            margin: 10px 0;
+        }
+
+        .faq {
+            background-color: black;
+            margin: 0 250px;
+        }
+
+        .container {
+            flex: 1;
+        }
+
+        footer {
+            background-color: black;
+            padding: 15px 0;
+            text-align: center;
+            z-index: 100;
+            color: #D400FF;
+            width: 100%;
+            margin-top: auto;
+            position: relative;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+
+        .footer-container a {
+            margin: 5px 15px;
+        }
+
+        .social-link {
+            color: #D400FF;
+            font-size: 1.2em;
+            font-family: "Courier New", monospace;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .social-link:hover {
+            color: #9B4F96;
+        }
+
+        .footer-info p {
+            font-size: 1em;
+            margin: 5px 0;
+            color: #D400FF;
+        }
+
+        .footer-info p:first-child {
+            font-size: 0.9em;
+            color: #9B4F96;
+        }
+
+        .footer-info p:last-child {
+            font-size: 1.1em;
+            color: #D400FF;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+            }
+
+            .pricing-table {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .pricing-plan {
+                width: 80%;
+                margin-bottom: 20px;
+            }
+        }
     </style>
 </head>
+
 <body>
     <div class="scan-lines"></div>
+    <h1 style="color: white;"><img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Telegram_X_2019_Logo.svg/768px-Telegram_X_2019_Logo.svg.png?20220403112442" />
+        SolPooler</h1>
     <div class="container">
-        <h1>SolPooler - #1 Volume booster</h1>
+        <h1>Boost Your Token's Volume on SOL 🚀</h1>
         <p id="description"></p>
+        <button id="startButton">Get Started Now</button><br /><br /><br />
+        <a id="actionButton" href="pages/terminal.html">Try for free</a><br /><br /><br />
+        <!-- <input type="text" id="terminalInput" placeholder="> Write a command..." disabled> -->
     </div>
-    <button id="startButton">Boost my volume.</button><br/><br/><br/>
-    <input type="text" id="terminalInput" placeholder="> Write a command..." disabled>
+
+    <!-- <div class="testimonials">
+        <h2>Video tutotial</h2>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+        </iframe>
+    </div> -->
+    <div class="pricing">
+        <h2>Pricing Plans</h2>
+        <div class="pricing-table">
+            <div class="pricing-plan">
+                <h3>Basic Plan</h3>
+                <p>$100 - $250/month</p>
+                <p>🎯 Ideal for small projects or those who want to test the tool without a large initial investment.
+                </p>
+                <p>Included Features:</p>
+                <ul>
+                    <li>🔑 Limited address creation (monthly address limit, e.g., 500 addresses).</li>
+                    <li>💼 Limited simulated transactions (e.g., 5,000 simulated transactions per month).</li>
+                    <li>📧 Standard support: Email assistance with standard response time.</li>
+                    <li>📈 Access to basic features for automating token purchases and generating volume.</li>
+                </ul>
+            </div>
+            <div class="pricing-plan">
+                <h3>Pro Plan</h3>
+                <p>$500 - $1,000/month</p>
+                <p>🚀 For intermediate projects looking to automate at scale and need more volume and flexibility.</p>
+                <p>Included Features:</p>
+                <ul>
+                    <li>🔄 Unlimited address creation (for a higher number of wallets).</li>
+                    <li>💹 High simulated transactions (e.g., 50,000 simulated transactions per month).</li>
+                    <li>⏱️ Priority support: Fast response (within a few hours).</li>
+                    <!-- <li>📊 Detailed dashboard to track performance of generated volume.</li> -->
+                    <li>🛠️ Basic customization options to adjust the bot based on client needs.</li>
+                    <li>🔗 Access to partner integrations to maximize volume on DEXs.</li>
+                </ul>
+            </div>
+            <div class="pricing-plan">
+                <h3>Premium Plan</h3>
+                <p>$2,000 - $5,000/month</p>
+                <p>🔥 High-end plan for high-potential or established projects needing a tailored solution, more
+                    customization, and support.</p>
+                <p>Included Features:</p>
+                <ul>
+                    <li>🌍 Unlimited address creation and transactions.</li>
+                    <li>💬 VIP support: Real-time response with a dedicated manager.</li>
+                    <!-- <li>📉 Advanced dashboard with filtering and detailed performance analysis options.</li> -->
+                    <li>🛠️ Advanced bot customization: Integration of new client-specific features (e.g., additional
+                        automations or strategy adjustments).</li>
+                    <!-- <li>💡 Volume optimization strategies: Tailored advice and optimizations to maximize the bot's efficiency and generated volume on different platforms.</li> -->
+                    <li>🚀 Priority access to new features and bot updates.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="testimonials">
+        <h2>What Our Users Say</h2>
+        <p>"SolPooler has revolutionized the way we manage our token transactions. Highly recommend!" - RN</p>
+        <p>"The automation and security features are top-notch. A must-have tool for any token developer." - AB</p>
+    </div>
+
+    <div class="faq">
+        <h2>Frequently Asked Questions</h2>
+        <p><strong>Q: How secure is SolPooler?</strong></p>
+        <p>A: We use advanced encryption and secure protocols to ensure the safety of your funds and data.</p>
+        <p><strong>Q: Can I try SolPooler for free?</strong></p>
+        <p>A: Yes, we offer a free plan with basic features so you can experience SolPooler before upgrading.</p>
+        <p><strong>Q: What happens if I encounter an issue or need support?</strong></p>
+        <p>A: We offer dedicated support through email and priority support channels for higher-tier plans. Our support
+            team is available to assist you with any issues or questions you may have.</p>
+
+        <p><strong>Q: How do I upgrade my plan?</strong></p>
+        <p>A: You can easily upgrade your plan by logging into your account and selecting the "Upgrade Plan" option.
+            You’ll then be prompted to choose the plan that suits your needs.</p>
+
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <a href="https://t.me/SolPooler_v1_Bot" target="_blank" class="social-link"><img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Telegram_X_2019_Logo.svg/768px-Telegram_X_2019_Logo.svg.png?20220403112442"></a>
+            <a href="https://twitter.com/SolPooler" target="_blank" class="social-link"><img
+                    src="https://img.freepik.com/free-vector/new-2023-twitter-logo-x-icon-design_1017-45418.jpg"></a>
+        </div>
+        <div class="footer-info">
+            <p>&copy; 2025 SolPooler. All rights reserved.</p>
+            <p>Made with ❤️ by SolPooler Team</p>
+        </div>
+    </footer>
 
     <script>
-        const text = "Connecting to the Solana network...\nCreating wallets...\nSending and managing funds...\nReady for token purchase.";
+        const text = "✅ Auto-Generate & Manage Wallets\n💰 Secure Fund Handling\n⚡ Instant Token Purchases\n📊 Real-Time Balance Tracking";
         let i = 0;
-        let audio = new Audio("https://www.fesliyanstudios.com/play-mp3/4385"); // Bruit de terminal
+        let audio = new Audio("https://www.fesliyanstudios.com/play-mp3/4385"); // Terminal sound effect
         let isTyping = false;
-	typeWriter();
+
+        typeWriter();
 
         function typeWriter() {
             if (i < text.length) {
                 let char = text.charAt(i);
                 document.getElementById("description").innerHTML += char === "\n" ? "<br>" : char;
                 i++;
-                setTimeout(typeWriter, 55);
+                setTimeout(typeWriter, 50);
             } else {
                 document.getElementById("description").style.borderRight = "none";
                 isTyping = false;
                 document.getElementById("terminalInput").disabled = false;
+
+                // After typing is complete, reset and start over after a brief delay
+                setTimeout(resetAndTypeAgain, 4000);
             }
         }
 
-        document.getElementById("startButton").addEventListener("click", function () {
-            if (!isTyping) {
-                isTyping = true;
-                document.getElementById("description").innerHTML = "";
-                i = 0;
-                audio.play();
-            }
-        });
-
-        document.getElementById("terminalInput").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                let input = this.value.trim().toLowerCase();
-                this.value = "";
-                if (input === "status") {
-                    alert("SolPooler est en ligne !");
-                } else if (input === "help") {
-                    alert("Commandes disponibles :\n- status\n- help");
-                } else {
-                    alert("Commande inconnue.");
-                }
-            }
-        });
+        function resetAndTypeAgain() {
+            i = 0;  // Reset the index to start over
+            document.getElementById("description").innerHTML = "";  // Clear the previous text
+            document.getElementById("description").style.borderRight = "solid 2px black";  // Re-enable the cursor effect
+            typeWriter();  // Start typing again
+        }
     </script>
 </body>
+
 </html>

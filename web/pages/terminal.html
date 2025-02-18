@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolPooler - Test Telegram Bot</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="scan-lines"></div>
+    <h1 style="color: white;"><img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Telegram_X_2019_Logo.svg/768px-Telegram_X_2019_Logo.svg.png?20220403112442" />
+        SolPooler</h1>
+    <div class="container">
+        <h1>Test Telegram Bot commands 🤖🧪</h1>
+        <!-- <input type="text" id="terminalInput" placeholder="> Write a command...">
+        <button id="backButton" onclick="sendCommand();">Send</button> -->
+    </div>
+    <div class="container">
+        <button id="backButton" onclick="window.history.back();">Back</button>
+    </div>
+    <div class="terminal">
+        <div class="output">
+            <div class="line">
+                <span class="prompt">C:\Users\Spool&gt;</span>
+                <span class="command">Welcome to the SolPooler Terminal!</span>
+            </div>
+            <div class="line">
+                <span class="prompt">C:\Users\Spool&gt;</span>
+                <span class="command">Type <b>help</b> for a list of commands.</span>
+            </div>
+        </div>
+
+        <div class="input-line">
+            <span class="prompt">C:\Users\Spool&gt;</span>
+            <input type="text" class="input" placeholder="Type a command..." id="cmdInput">
+            <button id="backButton" onclick="sendCommand();">Send</button>
+        </div>
+
+        <div class="suggestions" id="suggestionsBox">
+            <!-- Suggestions will appear here -->
+        </div>
+    </div>
+
+
+    <div class="command-suggestions" id="suggestionsBox">
+        <!-- Suggestions will appear here -->
+    </div>
+    <footer>
+        <div class="footer-container">
+            <a href="https://t.me/SolPooler_v1_Bot" target="_blank" class="social-link"><img
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Telegram_X_2019_Logo.svg/768px-Telegram_X_2019_Logo.svg.png?20220403112442"></a>
+            <a href="https://twitter.com/SolPooler" target="_blank" class="social-link"><img
+                    src="https://img.freepik.com/free-vector/new-2023-twitter-logo-x-icon-design_1017-45418.jpg"></a>
+        </div>
+        <div class="footer-info">
+            <p>&copy; 2025 SolPooler. All rights reserved.</p>
+            <p>Made with ❤️ by SolPooler Team</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+    </script>
+</body>
+
+</html>
