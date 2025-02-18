@@ -9,6 +9,7 @@
     <meta name="keywords" content="Solana, token, volume, automation, crypto">
     <meta property="og:title" content="SolPooler - Boost Your Token's Volume on SOL">
     <meta property="og:description" content="Increase your token's volume and transaction efficiency with SolPooler.">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <title>SolPooler - Boost Your Token's Volume on SOL</title>
     <style>
         body {
@@ -17,7 +18,7 @@
             background-position: center;
             background-repeat: no-repeat;
             color: #D400FF;
-            font-family: "Courier New", monospace;
+            font-family: 'Montserrat', sans-serif;
             text-align: center;
             padding-top: 50px;
             /* overflow: hidden; */
@@ -91,6 +92,7 @@
             display: block;
             width: fit-content;
             margin: auto;
+            margin-top: 30px;
             min-height: 6em;
         }
 
@@ -109,7 +111,7 @@
             border: 1px solid #D400FF;
             padding: 10px 20px;
             font-size: 1.2em;
-            font-family: "Courier New", monospace;
+            font-family: 'Montserrat', sans-serif;
             cursor: pointer;
             transition: 0.3s ease-in-out;
             box-shadow: 0 0 10px #D400FF;
@@ -132,7 +134,7 @@
 
         #actionButton {
             position: absolute;
-            margin-top: 50px;
+            margin-top: 60px;
             top: 59%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -141,7 +143,7 @@
             color: #D400FF;
             padding: 10px 20px;
             font-size: 1.2em;
-            font-family: "Courier New", monospace;
+            font-family: 'Montserrat', sans-serif;
             cursor: pointer;
             transition: 0.3s ease-in-out;
             box-shadow: 0 0 8px #D400FF;
@@ -175,7 +177,7 @@
             color: #D400FF;
             border: 1px solid #D400FF;
             font-size: 1.2em;
-            font-family: "Courier New", monospace;
+            font-family: 'Montserrat', sans-serif;
             width: 13.5%;
             padding: 10px;
             margin-top: 20px;
@@ -237,6 +239,7 @@
             font-size: 20px;
             margin: 10px 0;
         }
+
         .badge {
             background-color: #00FFA3;
             color: black;
@@ -279,7 +282,7 @@
         .social-link {
             color: #D400FF;
             font-size: 1.2em;
-            font-family: "Courier New", monospace;
+            font-family: 'Montserrat', sans-serif;
             text-decoration: none;
             transition: color 0.3s;
         }
@@ -333,7 +336,6 @@
                 font-size: 1em;
             }
         }
-
     </style>
 </head>
 
@@ -347,7 +349,7 @@
         <p id="description"></p>
         <!-- <input type="text" id="terminalInput" placeholder="> Write a command..." disabled> -->
     </div>
-    <div class="container fade-in" style="display: block; margin-top: 50px;">
+    <div class="container fade-in" style="display: block;margin-top: 30px;">
         <button id="startButton" onclick="showLoader()">Get Started Now</button><br><br>
         <div id="loader" style="display: none;">Loading...</div>
         <a id="actionButton" href="pages/terminal.html">Try for free</a>

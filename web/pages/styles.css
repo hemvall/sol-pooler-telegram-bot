@@ -13,7 +13,7 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     color: #D400FF;
-    font-family: "Courier New", monospace;
+    font-family: 'Montserrat', sans-serif;
     text-align: center;
     padding-top: 50px;
     /* overflow: hidden; */
@@ -67,7 +67,7 @@ img {
     color: white;
     border: 1px solid #D400FF;
     font-size: 1.2em;
-    font-family: "Courier New", monospace;
+    font-family: 'Montserrat', sans-serif;
     width: 40%;
     padding: 10px;
     margin-top: 20px;
@@ -128,7 +128,7 @@ footer {
 .social-link {
     color: #D400FF;
     font-size: 1.2em;
-    font-family: "Courier New", monospace;
+    font-family: 'Montserrat', sans-serif;
     text-decoration: none;
     transition: color 0.3s;
 }
@@ -164,7 +164,7 @@ footer {
     border: none;
     padding: 10px 20px;
     font-size: 1.2em;
-    font-family: "Courier New", monospace;
+    font-family: 'Montserrat', sans-serif;
     cursor: pointer;
     transition: 0.3s ease-in-out;
     box-shadow: 0 0 10px #D400FF;
@@ -175,6 +175,7 @@ footer {
 #backButton:hover {
     background-color: transparent;
     color: #D400FF;
+    background-color: #1e1e1e;
     box-shadow: 0 0 20px #D400FF;
     font-weight: 600;
 }
@@ -214,7 +215,7 @@ p {
 body {
     background-color: #282c34;
     color: #fff;
-    font-family: monospace, "Courier New", Courier, monospace;
+    font-family: 'Montserrat', sans-serif;
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -224,6 +225,7 @@ body {
     background-color: #1e1e1e;
     width: 70%;
     max-width: 900px;
+    margin-top: 30px;
     height: 80%;
     border: 2px solid #D400FF;
     border-radius: 5px;
@@ -262,7 +264,7 @@ body {
     background: #1e1e1e;
     border: none;
     color: #fff;
-    font-family: monospace;
+    font-family: 'Montserrat', sans-serif;
     font-size: 16px;
     outline: none;
     width: 100%;
