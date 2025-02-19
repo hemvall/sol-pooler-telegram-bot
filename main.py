@@ -4,15 +4,13 @@ from telegram.ext import Application, CommandHandler, CallbackQueryHandler, Conv
 from solders.keypair import Keypair
 from solders.pubkey import Pubkey
 from solders.transaction import Transaction
+from solders.message import Message
 from solders.system_program import transfer, TransferParams
 from solana.rpc.api import Client
-import spl.token.instructions as spl_token
-from solders.transaction import VersionedTransaction
-from solders.message import MessageV0
-from solana.rpc.commitment import Commitment
-import requests
+from solana.rpc.types import TxOpts
+from solana.rpc.commitment import Confirmed
+from spl.token.instructions import transfer as spl_transfer, get_associated_token_address
 import base64
-import base58
 import json
 import os
 
@@ -135,51 +133,60 @@ async def balances_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         count += 1
 
 
-async def buy_token_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def buy_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # TODO : connect to each wallet and buy /!\ don't forget to make it random (which wallet)
-    # Load wallet
-    private_key = "34nA4uSZrb3se1jPRCCn6NqPLBiMg5nNS5DMRrzk1hzBvUxF9qej47RhuXrPJEADcEqEVa3hndtPDVCJcoDu4ChD"  # Replace with your private key
-    private_key_bytes = base58.b58decode(private_key)
-    wallet = Keypair.from_bytes(private_key_bytes)
+    try:
+        # Load keypair (you should securely manage private keys)
+        user_keypair = Keypair.generate()
+        user_pubkey = user_keypair.public_key
+        print(f"Generated wallet: {user_pubkey}")
 
-    # Get the latest blockhash
-    latest_blockhash = client.get_latest_blockhash().value.blockhash
+        # Define token details
+        contract_address = "Es9vMFrzBfnvE16qvEPCW8hdTu96xz5P2Y5jp6tcXHte"  # USDT (example)
+        token_mint_pubkey = Pubkey(contract_address)
+        amount_to_buy = 0.1  # SOL
 
-    # Example: Swap via Jupiter API (simplified)
-    JUPITER_API = "https://quote-api.jup.ag/v6/quote"
-    INPUT_MINT = "So11111111111111111111111111111111111111112"  # SOL
-    OUTPUT_MINT = "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU"  # Example USDC on Devnet
-    AMOUNT_IN = 10000000  # Amount in lamports (0.01 SOL)
+        await update.message.reply_text(f"🟢 Buying {amount_to_buy} SOL worth of tokens.")
+        print(f"Buying {amount_to_buy} SOL worth of {contract_address}")
 
-    quote_response = requests.get(
-        f"{JUPITER_API}?inputMint={INPUT_MINT}&outputMint={OUTPUT_MINT}&amount={AMOUNT_IN}&slippageBps=50"
-    )
-    quote = quote_response.json()
-    print(quote)  # Debugging step
+        # Get recent blockhash
+        blockhash_resp = await client.get_latest_blockhash()
+        recent_blockhash = blockhash_resp['result']['value']['blockhash']
+        print(f"Blockhash: {recent_blockhash}")
 
-    # Get swap transaction from Jupiter
-    swap_tx = requests.post(
-        "https://quote-api.jup.ag/v6/swap",
-        json={
-            "quoteResponse": quote,
-            "userPublicKey": str(wallet.pubkey()),
-            "wrapAndUnwrapSol": True,
-        }
-    ).json()
-    print(swap_tx)
+        # Get Associated Token Account (ATA) for the user
+        user_ata = get_associated_token_address(user_pubkey, token_mint_pubkey)
+        print(f"User's ATA: {user_ata}")
 
-    # Deserialize transaction
-    encoded_tx = swap_tx["swapTransaction"]
-    decoded_tx = base64.b64decode(encoded_tx)
-    transaction = VersionedTransaction.from_bytes(decoded_tx)
+        # Construct the transfer instruction (replace with actual swap logic if needed)
+        transfer_instr = transfer(
+            TransferParams(
+                from_pubkey=user_pubkey,
+                to_pubkey=token_mint_pubkey,  # This is incorrect for actual token swaps, use a DEX program
+                lamports=int(amount_to_buy * 10 ** 9),
+            )
+        )
 
-    # Sign transaction
-    signed_tx = transaction.sign([wallet])
+        # Create transaction
+        transaction = Transaction(recent_blockhash=recent_blockhash, fee_payer=user_pubkey)
+        transaction.add(transfer_instr)
 
-    # Send transaction
-    response = client.send_transaction(signed_tx, commitment=Commitment("confirmed"))
+        # Sign transaction
+        transaction.sign(user_keypair)
+        print("Transaction signed.")
 
-    print(f"Transaction ID: {response.value}")
+        # Send transaction
+        tx_response = await client.send_transaction(transaction, user_keypair,
+                                                    opts=TxOpts(preflight_commitment=Confirmed))
+        signature = tx_response['result']
+        print(f"Transaction sent: {signature}")
+
+        await update.message.reply_text(f"✅ Token purchase transaction sent: {signature}")
+
+    except Exception as e:
+        print(f"Error: {e}")
+        await update.message.reply_text("❌ Error during token purchase.")
+
 
 async def transfer_funds_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("🔄 Transferring funds...")
@@ -252,7 +259,7 @@ async def start_command(update: Update, context: CallbackContext) -> int:
         [InlineKeyboardButton("🛠 Create Wallet", callback_data='create_wallets_command'),
          InlineKeyboardButton("💰 Check Balance", callback_data='balances_command')],
 
-        [InlineKeyboardButton("💲 Buy Token", callback_data='buy_token_command'),
+        [InlineKeyboardButton("💲 Buy Token", callback_data='buy_command'),
          InlineKeyboardButton("📤 Transfer Funds", callback_data='transfer_funds_command')],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -272,7 +279,7 @@ async def button_callback(update: Update, context: CallbackContext) -> int:
     elif query.data == "balances_command":
         await query.edit_message_text(text="Checking your wallets...")
         return OPTION2
-    elif query.data == "buy_token_command":
+    elif query.data == "buy_command":
         await query.edit_message_text(text="Token purchase in progress...")
         return OPTION3
     elif query.data == "transfer_funds_command":
@@ -415,7 +422,7 @@ if __name__ == '__main__':
     app.add_handler(import_wallet_conversation)
     app.add_handler(CommandHandler('create_wallets', create_wallets_command))
     app.add_handler(CommandHandler('balances', balances_command))
-    app.add_handler(CommandHandler('buy', buy_token_command))
+    app.add_handler(CommandHandler('buy', buy_command))
     app.add_handler(CommandHandler('transfer_funds', transfer_funds_command))
     app.add_handler(CommandHandler('withdraw_funds', withdraw_funds_command))
     app.add_handler(CommandHandler('import_wallet', import_wallet_command))

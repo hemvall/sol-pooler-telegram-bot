@@ -236,6 +236,13 @@ body {
     overflow: hidden;
 }
 
+.logoContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
 .output {
     flex: 1;
     overflow-y: auto;
@@ -298,7 +305,7 @@ body {
 
 @keyframes fadeIn {
     from {
-        opacity: .2;
+        opacity: .4;
         transform: translateY(10px);
     }
 
@@ -310,5 +317,5 @@ body {
 
 .fade-in {
     opacity: 0;
-    animation: fadeIn 1s ease-out forwards;
+    animation: fadeIn .5s ease-out forwards;
 }
