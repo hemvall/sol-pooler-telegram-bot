@@ -101,6 +101,13 @@
             margin: auto;
         }
 
+        .logoContainer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
         #startButton {
             position: absolute;
             top: 50%;
@@ -341,8 +348,9 @@
 
 <body>
     <div class="scan-lines"></div>
-    <h1 style="color: white;" class="fade-in"><img alt="SolPooler Logo"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Telegram_X_2019_Logo.svg/768px-Telegram_X_2019_Logo.svg.png?20220403112442" />
+    <h1 class="logoContainer" style="color: white;" class="fade-in"><img
+            style="height: 70px;width: 70px;border-radius: 50%; margin: 0 10px;" alt="SolPooler Logo"
+            src="./assets/logo_wout_bg.png" />
         SolPooler</h1>
     <div class="container fade-in">
         <h1>Boost Your Token's Volume on SOL 🚀</h1>
@@ -452,40 +460,40 @@
     <script>
         const text = "✅ Auto-Generate & Manage Wallets\n💰 Secure Fund Handling\n⚡ Instant Token Purchases\n📊 Real-Time Balance Tracking";
         let i = 0;
-        let audio = new Audio("https://www.fesliyanstudios.com/play-mp3/4385"); // Terminal sound effect
         let isTyping = false;
-
-        typeWriter();
+        let audio = new Audio("https://www.fesliyanstudios.com/play-mp3/4385"); // Terminal sound effect
 
         function typeWriter() {
             if (i < text.length) {
                 let char = text.charAt(i);
-                document.getElementById("description").innerHTML += char === "\n" ? "<br>" : char;
+                let descriptionElement = document.getElementById("description");
+
+                if (char === "\n") {
+                    descriptionElement.innerHTML += "<br>";
+                } else {
+                    descriptionElement.innerHTML += char;
+                }
+
                 i++;
-                setTimeout(typeWriter, 50);
+                let delay = Math.random() * 40 + 40; // Légère variation pour un effet plus naturel
+                setTimeout(typeWriter, delay);
             } else {
                 document.getElementById("description").style.borderRight = "none";
                 isTyping = false;
                 document.getElementById("terminalInput").disabled = false;
 
-                // After typing is complete, reset and start over after a brief delay
                 setTimeout(resetAndTypeAgain, 4000);
             }
         }
-
         function resetAndTypeAgain() {
-            i = 0;  // Reset the index to start over
-            document.getElementById("description").innerHTML = "";  // Clear the previous text
-            document.getElementById("description").style.borderRight = "solid 2px black";  // Re-enable the cursor effect
-            typeWriter();  // Start typing again
+            i = 0;
+            document.getElementById("description").innerHTML = "";
+            document.getElementById("description").style.borderRight = "2px solid white"; // Rétablir le curseur de saisie
+            typeWriter();
         }
-        function showLoader() {
-            document.getElementById("loader").style.display = "block";
-            // Simulate loading (you can replace this with actual logic)
-            setTimeout(() => {
-                document.getElementById("loader").style.display = "none";
-            }, 2000);
-        }
+
+        typeWriter();
+
     </script>
 </body>
 

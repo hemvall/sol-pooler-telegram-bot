@@ -4,9 +4,15 @@ from telegram.ext import Application, CommandHandler, CallbackQueryHandler, Conv
 from solders.keypair import Keypair
 from solders.pubkey import Pubkey
 from solders.transaction import Transaction
-from solders.system_program import TransferWithSeedParams, TransferParams
+from solders.system_program import transfer, TransferParams
 from solana.rpc.api import Client
+import spl.token.instructions as spl_token
+from solders.transaction import VersionedTransaction
+from solders.message import MessageV0
+from solana.rpc.commitment import Commitment
+import requests
 import base64
+import base58
 import json
 import os
 
@@ -61,6 +67,8 @@ async def create_wallets_command(update: Update, context: ContextTypes.DEFAULT_T
     nb_wallets: int = 3  # Change to 5 if needed
     wallets = []
     new_wallets = []
+    user = update.message.from_user
+    username = user.username
     os.makedirs(os.path.dirname(wallets_file_path), exist_ok=True)
 
     # Load existing data to append new wallets
@@ -128,60 +136,95 @@ async def balances_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def buy_token_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    contract_address: str = ''
-    if len(context.args) == 1:  # Verify if the parameter is present
-        contract_address = context.args[0]
-        await update.message.reply_text(f"The purchase order for the contract {contract_address} is in progress..")
-    else:
-        await update.message.reply_text("Invalid input. Please try again with a valid contract address.\n\n/buy_token <insert-token-CA>")
     # TODO : connect to each wallet and buy /!\ don't forget to make it random (which wallet)
+    # Load wallet
+    private_key = "34nA4uSZrb3se1jPRCCn6NqPLBiMg5nNS5DMRrzk1hzBvUxF9qej47RhuXrPJEADcEqEVa3hndtPDVCJcoDu4ChD"  # Replace with your private key
+    private_key_bytes = base58.b58decode(private_key)
+    wallet = Keypair.from_bytes(private_key_bytes)
+
+    # Get the latest blockhash
+    latest_blockhash = client.get_latest_blockhash().value.blockhash
+
+    # Example: Swap via Jupiter API (simplified)
+    JUPITER_API = "https://quote-api.jup.ag/v6/quote"
+    INPUT_MINT = "So11111111111111111111111111111111111111112"  # SOL
+    OUTPUT_MINT = "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU"  # Example USDC on Devnet
+    AMOUNT_IN = 10000000  # Amount in lamports (0.01 SOL)
+
+    quote_response = requests.get(
+        f"{JUPITER_API}?inputMint={INPUT_MINT}&outputMint={OUTPUT_MINT}&amount={AMOUNT_IN}&slippageBps=50"
+    )
+    quote = quote_response.json()
+    print(quote)  # Debugging step
+
+    # Get swap transaction from Jupiter
+    swap_tx = requests.post(
+        "https://quote-api.jup.ag/v6/swap",
+        json={
+            "quoteResponse": quote,
+            "userPublicKey": str(wallet.pubkey()),
+            "wrapAndUnwrapSol": True,
+        }
+    ).json()
+    print(swap_tx)
+
+    # Deserialize transaction
+    encoded_tx = swap_tx["swapTransaction"]
+    decoded_tx = base64.b64decode(encoded_tx)
+    transaction = VersionedTransaction.from_bytes(decoded_tx)
+
+    # Sign transaction
+    signed_tx = transaction.sign([wallet])
+
+    # Send transaction
+    response = client.send_transaction(signed_tx, commitment=Commitment("confirmed"))
+
+    print(f"Transaction ID: {response.value}")
 
 async def transfer_funds_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Transferring funds to your subwallets...")
+    await update.message.reply_text("🔄 Transferring funds...")
+    sender_public_key = Pubkey.from_string("9dqa3aPW8B8FdkvhBWFBvXZs5TKWeyYPidLzRzWrhq7M")
+    sender_private_key = "Z0rgDd7M+5upSDou0ofm84PkD6AsKiI9eVN/t3JMM0OATVKP3EJ0zYO0c4i3JxHznZBXMRJO/5rOhg6+idrg4A=="
+    receiver_public_key = "3khUiiKtVTe5kV8t7ybZ9E3dMWa1FoNCJRtwYCi8ECm4"
+    receiver_public_key = "2tFbFhbiDVYLUeC5/7qjqYKk2cQctFC3ajOknrL0UIko6R3+0g7E3JfcVaTHYg1wNP4KAajM++4MpbbwTlOG3w=="
+    try:
+        sender_private_key_bytes = base64.b64decode(sender_private_key)
+        if len(sender_private_key_bytes) != 64:
+            raise ValueError("Private key size must be 64 bytes.")
+    except Exception as e:
+        print(f"Error decoding private key: {e}")
+        exit()
+    # Connect to the Solana devnet or mainnet
+    rpc_url = "https://api.devnet.solana.com"
+    client = Client(rpc_url)
 
-    # Transaction details
-    amount_in_sol = 0.05
-    lamports = int(amount_in_sol * 1_000_000_000)  # 1 SOL = 1e9 lamports
+    # Get the sender's balance (this step is optional, just to check before the transfer)
+    sender_balance = client.get_balance(sender_public_key)
+    print(f"Sender balance: {sender_balance['result']['value']} SOL")
 
-    # main wallet import
-    with open(wallets_file_path, "r") as file:
-        data = json.load(file)  # Parse JSON
-        wallets = data.get("wallets", [])  # Extract the list of wallets
-        main_wallet = data.get("main_wallet", {})  # Extract the main wallet
-    sender_private_key = main_wallet["private_key"]
-    sender_public_key = main_wallet["public_key"]
-
-    # recipient's wallets import
-    for wallet in wallets:
-        recipient_public_key = wallet["public_key"]
-        print(f"Sending {amount_in_sol} SOL to {recipient_public_key} from {sender_public_key}...")
-    await update.message.reply_text(f"✅ Successfully sent {amount_in_sol} SOL to Sub Wallets from {sender_public_key} !➡️💸")
-
-
-    """
-    # Set up the params for the transfer with seed
-    params = TransferWithSeedParams(
-        from_pubkey=sender_public_key,
-        from_base=from_base_pubkey,
-        from_seed=from_seed,
-        from_owner=from_owner_pubkey,
-        to_pubkey=recipient_public_key,
-        lamports=lamports
-    )
+    # Transfer amount in SOL
+    amount = 0.1  # amount to transfer
 
     # Create the transaction
-    transaction = Transaction().add(
-        transfer_with_seed(params)
+    transaction = Transaction()
+    transaction.add(
+        TransferParams.transfer(
+            sender_public_key,
+            receiver_public_key,
+            amount * 10 ** 9  # Amount in lamports (1 SOL = 10^9 lamports)
+        )
     )
 
-    # Send the transaction
-    response = client.send_transaction(transaction, sender_keypair)
+    # Sign the transaction with the sender's keypair
+    transaction.sign(sender_private_key)
 
-    # Output the transaction response
-    print(f"Transaction signature: {response['result']}")
-    """
-    print("Transaction sent with signature : ???")
+    # Send the transaction to the network
+    response = client.send_transaction(transaction, sender_private_key)
 
+    # Confirm the transaction
+    signature = response['result']
+    confirmation = client.confirm_transaction(signature)
+    print(f"Transaction confirmed with signature: {signature}")
 async def withdraw_funds_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Transferring funds to your main wallet...")
 
@@ -252,7 +295,7 @@ def handle_response(text: str) -> str:
             "I can help you with the following commands:\n\n"
             "/create_wallets - Create a new Solana wallet\n"
             "/balances - Check your current wallet balance\n"
-            "/buy_token <contract-address> - Buy a token from a provided contract address\n"
+            "/buy <contract-address> - Buy a token from a provided contract address\n"
             "/transfer_funds - Transfer funds to a new address\n"
             "Just type a command to get started!"
         )
@@ -265,7 +308,7 @@ def handle_response(text: str) -> str:
 
     elif 'token' in text:
         return (
-            "To buy a token, use the /buy_token <contract-address> command.\n"
+            "To buy a token, use the /buy <contract-address> command.\n"
             "Just provide the contract address to proceed with the purchase!"
         )
 
@@ -372,7 +415,7 @@ if __name__ == '__main__':
     app.add_handler(import_wallet_conversation)
     app.add_handler(CommandHandler('create_wallets', create_wallets_command))
     app.add_handler(CommandHandler('balances', balances_command))
-    app.add_handler(CommandHandler('buy_token', buy_token_command))
+    app.add_handler(CommandHandler('buy', buy_token_command))
     app.add_handler(CommandHandler('transfer_funds', transfer_funds_command))
     app.add_handler(CommandHandler('withdraw_funds', withdraw_funds_command))
     app.add_handler(CommandHandler('import_wallet', import_wallet_command))
