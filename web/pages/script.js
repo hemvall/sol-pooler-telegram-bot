@@ -54,6 +54,91 @@ document.getElementById("cmdInput").addEventListener("input", function () {
     }
 });
 
+document.getElementById("sendButton").addEventListener("click", function (e) {
+    const input = document.getElementById("cmdInput").value.trim(); // Get value from the input field
+    const outputDiv = document.querySelector(".output");
+
+    if (input) {
+        const newLine = document.createElement("div");
+        newLine.classList.add("line");
+        newLine.innerHTML = `<span class="prompt">C:\\Users\\Spool&gt;</span> <span class="command">${input}</span>`;
+        outputDiv.appendChild(newLine);
+
+        // Handle the commands
+        if (input === "/create_wallets") {
+            const selectedWallets = pickRandomWallets(wallets, 3);
+
+            const createWalletsText = document.createElement("div");
+            createWalletsText.classList.add("line");
+            createWalletsText.innerHTML = `<span class="prompt">C:\\Users\\Spool&gt;</span>Here are your 3 new wallets:` +
+                selectedWallets.map(wallet => `<br>${wallet}`).join("") + "<br>💡 They have been imported into your account";
+
+            outputDiv.appendChild(createWalletsText);
+        } else if (input === "/balances") {
+            const balancesText = document.createElement("div");
+            balancesText.classList.add("line");
+            balancesText.innerHTML = `<span class="prompt">C:\\Users\\Spool&gt;</span> <span class="command">🌐 Main Wallet (RS6A...47KD): 8.61 SOL<br>💼 SubWallet 1 (L9XT...XCBE): 5.21 SOL<br>💼 SubWallet 2 (C0XZ...T5U7): 0.08 SOL</span>`;
+            outputDiv.appendChild(balancesText);
+        } else if (input === "/buy_token") {
+            function getUserInput() {
+                return new Promise((resolve) => {
+                    const userInput = prompt("Please provide the token CA you want to buy : ");
+                    resolve(userInput);
+                });
+            }
+
+            // Function needs to be async to use await
+            async function handleBuyToken() {
+                const tokenPromptText = document.createElement("div");
+                tokenPromptText.classList.add("line");
+                tokenPromptText.innerHTML = `<span class="prompt">C:\\Users\\Spool&gt;</span> <span class="command">Please provide the token CA you want to buy.</span>`;
+                outputDiv.appendChild(tokenPromptText);
+
+                const tokenInput = await getUserInput();
+
+                const buyTokenText = document.createElement("div");
+                buyTokenText.classList.add("line");
+                buyTokenText.innerHTML = `<span class="prompt">C:\\Users\\Spool&gt;</span> <span class="command">Successfully purchased the token with your wallets (${tokenInput})</span>`;
+                outputDiv.appendChild(buyTokenText);
+            }
+
+            handleBuyToken();
+        } else if (input === "/import_wallet") {
+            const importWalletText = document.createElement("div");
+            importWalletText.classList.add("line");
+            importWalletText.innerHTML = `<span class="prompt">C:\\Users\\Spool&gt;</span> <span class="command">Please provide your wallet's Public and Private keys.</span>`;
+            outputDiv.appendChild(importWalletText);
+        } else if (input.startsWith("/transfer_funds")) {
+            const transferFundsText = document.createElement("div");
+            transferFundsText.classList.add("line");
+            const destination = input.split(" ")[1] || "No address provided";
+            transferFundsText.innerHTML = `<span class="prompt">C:\\Users\\Spool&gt;</span> <span class="command">Successfully transferred 0.1 SOL to each of your SOL subwallets ${destination}.</span>`;
+            outputDiv.appendChild(transferFundsText);
+        } else if (input === "/withdraw_funds") {
+            const withdrawFundsText = document.createElement("div");
+            withdrawFundsText.classList.add("line");
+            withdrawFundsText.innerHTML = `<span class="prompt">C:\\Users\\Spool&gt;</span> <span class="command">Funds withdrawn successfully to your main wallet!</span>`;
+            outputDiv.appendChild(withdrawFundsText);
+        } else if (input === "help") {
+            const helpText = document.createElement("div");
+            helpText.classList.add("line");
+            helpText.innerHTML = `<span class="prompt">C:\\Users\\Spool&gt;</span> <span class="command">Available commands: <b>/create_wallets</b>, <b>/balances</b>, <b>/buy_token</b>, <b>/import_wallet</b>, <b>/transfer_funds &lt;address&gt;</b>, <b>/withdraw_funds</b></span>`;
+            outputDiv.appendChild(helpText);
+        } else if (input === "clear") {
+            document.querySelector(".output").innerHTML = '';
+        } else {
+            const unknownCommand = document.createElement("div");
+            unknownCommand.classList.add("line");
+            unknownCommand.innerHTML = `<span class="prompt">C:\\Users\\Spool&gt;</span> <span class="command">Unknown command: ${input}</span>`;
+            outputDiv.appendChild(unknownCommand);
+        }
+
+        document.getElementById("cmdInput").value = ""; // Clear the input field after sending the command
+        outputDiv.scrollTop = outputDiv.scrollHeight; // Auto-scroll to bottom
+    }
+});
+
+
 document.getElementById("cmdInput").addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
         const input = this.value.trim();
@@ -87,7 +172,7 @@ document.getElementById("cmdInput").addEventListener("keypress", function (e) {
                         resolve(userInput);
                     });
                 }
-                
+
                 // Function needs to be async to use await
                 async function handleBuyToken() {
                     // Ask for the token name or quantity before purchasing
