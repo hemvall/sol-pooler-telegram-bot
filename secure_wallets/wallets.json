@@ -11,10 +11,22 @@
         {
             "public_key": "3khUiiKtVTe5kV8t7ybZ9E3dMWa1FoNCJRtwYCi8ECm4",
             "private_key": "2tFbFhbiDVYLUeC5/7qjqYKk2cQctFC3ajOknrL0UIko6R3+0g7E3JfcVaTHYg1wNP4KAajM++4MpbbwTlOG3w=="
+        },
+        {
+            "public_key": "7S3UK6BkVWhtUDsyb3Paiwo9ZGZcXX2KBkbrBS7trksR",
+            "private_key": "uZn+ChMDDuYOHqvqtkC/zEWOeHgfapDx00/DZOgpLfFfkG+FvJr3x5i9kA8wiOveriWuWTwPB4GhdhGZ2QmkUA=="
+        },
+        {
+            "public_key": "9o8NSK2s77ewqTC77pbBwAc22wDmM4zwhRKocs6nCfDe",
+            "private_key": "oeq+Iq+DvSnmOXHb6igyptPHepJ4A+OzrRVxJhMBRIeCroui2dNQjoPyTdsa4SwtR+6HOtAsrTQUqLpfO5HX3Q=="
+        },
+        {
+            "public_key": "DDAJyf2k5QR4uzgRWfHCHhDJiKU7UZKoA4JhcijhVwY3",
+            "private_key": "eoRGfuAtGT8VVJLWFCFMh1AhK3nmvzQPJahaD5+bJAa1ab1XU3XAt7ehGffgpyn1FocBVV2QGHe46bKWZt2lgA=="
         }
     ],
     "main_wallet": {
-        "public_key": "9dqa3aPW8B8FdkvhBWFBvXZs5TKWeyYPidLzRzWrhq7M",
-        "private_key": "Z0rgDd7M+5upSDou0ofm84PkD6AsKiI9eVN/t3JMM0OATVKP3EJ0zYO0c4i3JxHznZBXMRJO/5rOhg6+idrg4A=="
+        "public_key": "5QKmyqaAvMT5eLirmysM6SaanKwJM9dAf3f3ctH6gFKZ",
+        "private_key": "2CS55fJph8PxjidSP9HBAnnBq3ynG4SWCB7fPt9mLbXFDnNEePSJJkbrPyCeiVy88sBEGTXMoanTiibrmxuRfEUs"
     }
 }

@@ -1,0 +1,20 @@
+{
+    "wallets": [
+        {
+            "public_key": "71dbtWazb8jym8wMgtPThM73VURXy3CALMu7NZ2hbmEt",
+            "private_key": "F8v2cl022CKDKV1zZvxTVcDjxoOBAGUAiHHI6eOg41tZT4HMkGdKHcA67yUGGQ4CbqwmrMA/6aH5lYMG0YHJRQ=="
+        },
+        {
+            "public_key": "ExqYog1Wt8vvcfe4CmAUpwKbKeGxAYVWBYei2M3JP6X8",
+            "private_key": "BKmECn/EtsYq3+3yl7WdakbLD7dJz5xpSdjw/VRCzaLPdcSyLqM0hw6dNiq+fedI2TdHSkhh5QZzuSmaBnS/xw=="
+        },
+        {
+            "public_key": "8wytNnCA7zMG2REfdGEShEomsNY2ZH9bpZsxHDSFDDYm",
+            "private_key": "mjXDny0oZI8XT5vz1iCYmHTAHVSPEBSaHO3nZ+9HfGJ2F34+K737ELySuGjpKRQ0ZCV8J+nvllMqDELXOZfoQg=="
+        }
+    ],
+    "main_wallet": {
+        "public_key": "5QKmyqaAvMT5eLirmysM6SaanKwJM9dAf3f3ctH6gFKZ",
+        "private_key": "2CS55fJph8PxjidSP9HBAnnBq3ynG4SWCB7fPt9mLbXFDnNEePSJJkbrPyCeiVy88sBEGTXMoanTiibrmxuRfEUs"
+    }
+}
