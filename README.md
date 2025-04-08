@@ -19,9 +19,11 @@ QuickNode - RPC
   ![image](https://github.com/user-attachments/assets/a6e9a60c-6418-4407-a6cf-3f450e0a303d)
 
 - Functional Telegram Bot
-![L7-MpitM](https://github.com/user-attachments/assets/64130ac2-72ca-400f-8a7d-3990ece76c20)
-![GuJbDgr0](https://github.com/user-attachments/assets/4e72e8c3-486a-4847-ad75-be25e5731109)
-![QRQ7krrx](https://github.com/user-attachments/assets/8350ace4-38b2-4255-8111-d86f782b0350)
+  
+  ![L7-MpitM](https://github.com/user-attachments/assets/64130ac2-72ca-400f-8a7d-3990ece76c20)
+  ![GuJbDgr0](https://github.com/user-attachments/assets/4e72e8c3-486a-4847-ad75-be25e5731109)
+  ![QRQ7krrx](https://github.com/user-attachments/assets/8350ace4-38b2-4255-8111-d86f782b0350)
+  
 
 ## 💻 Commands
 
