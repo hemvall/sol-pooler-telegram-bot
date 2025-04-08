@@ -11,14 +11,16 @@ QuickNode - RPC
 - **Telegram Command Interface**: Control the bot with simple commands.
 
 ### Showcase website :
-- Main Page
-![image](https://github.com/user-attachments/assets/2c6a2ffc-585f-4b72-aa57-ccb8c5b938e0)
+**Main Page**
 
-- Online Bot simulator
+  ![image](https://github.com/user-attachments/assets/fabef219-36ae-4508-9b26-436d56d19761)
+
+**Online Bot Simulator**
+
   ![image](https://github.com/user-attachments/assets/1971f9d5-cf86-4370-af12-756633ee2369)
   ![image](https://github.com/user-attachments/assets/a6e9a60c-6418-4407-a6cf-3f450e0a303d)
 
-- Functional Telegram Bot
+**Functional Telegram Bot**
   
   ![L7-MpitM](https://github.com/user-attachments/assets/64130ac2-72ca-400f-8a7d-3990ece76c20)
   ![GuJbDgr0](https://github.com/user-attachments/assets/4e72e8c3-486a-4847-ad75-be25e5731109)
