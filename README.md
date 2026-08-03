@@ -1,5 +1,6 @@
 # SolPooler - Telegram Bot for Solana Trading
-THIS PROJECT IS DOWN BECAUSE OF SOLANA DUMP LOL
+THIS PROJECT IS DOWN BECAUSE OF SOLANA DUMP LOL ;(
+
 ## 🚀 Overview
 SolPooler is a Telegram bot designed to automate the creation of Solana addresses, receive funds, and execute token purchases using provided contract addresses (CA). This bot streamlines trading by simplifying the process of funding wallets and buying tokens automatically.
 QuickNode - RPC
